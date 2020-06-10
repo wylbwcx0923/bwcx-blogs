@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: bwcx-blogs-fastdfs
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 121.196.216.78:8848
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 20MB
+server:
+  port: 6002
+fdfs:
+  # 链接超时
+  connect-timeout: 60
+  # 读取时间
+  so-timeout: 60
+  # 生成缩略图参数
+  thumb-image:
+    width: 150
+    height: 150
+  tracker-list: 121.196.216.78:22122

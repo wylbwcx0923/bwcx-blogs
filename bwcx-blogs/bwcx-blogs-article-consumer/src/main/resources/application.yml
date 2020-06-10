@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: bwcx-blogs-article-consumer
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 121.196.216.78:8848
+server:
+  port: 9002
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: bwcx-blogs-article-provider
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 121.196.216.78:8848
+  datasource:
+    druid:
+      url: jdbc:mysql://120.53.29.28:3306/blogs_article?useUnicode=true&characterEncoding=utf-8&useSSL=false
+      username: root
+      password: 123456
+      initial-size: 1
+      min-idle: 1
+      max-active: 20
+      test-on-borrow: true
+      driver-class-name: com.mysql.jdbc.Driver
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 20MB
+ribbon:
+  ReadTimeout: 60000
+  ConnectTimeout: 60000
+
+server:
+  port: 8002
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+mybatis:
+  type-aliases-package: com.bwcx.blogs.article.provider.entity
+  mapper-locations: classpath:mapper/*.xml
