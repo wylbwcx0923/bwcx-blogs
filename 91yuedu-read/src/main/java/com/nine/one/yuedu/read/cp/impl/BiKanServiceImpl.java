@@ -72,7 +72,7 @@ public class BiKanServiceImpl implements BiKanService {
         biKanBookInfo.setProgress(bookInfo.getCompleteState() == 0 ? 1 : 2);
         biKanBookInfo.setChapterCount(bookInfo.getLastChapterId() + "");
         biKanBookInfo.setCpUpdateTime(System.currentTimeMillis());
-        biKanBookInfo.setCategory(bookInfo.getCategory());
+        biKanBookInfo.setCategory(getCategory(bookInfo.getCategory()));
         return biKanBookInfo;
     }
 
@@ -82,7 +82,7 @@ public class BiKanServiceImpl implements BiKanService {
         example.createCriteria().andEqualTo("bookId", bookId);
         List<ChapterInfo> chapterInfos = chapterInfoMapper.selectByExample(example);
 
-        BiKanVolume biKanVolume=new BiKanVolume();
+        BiKanVolume biKanVolume = new BiKanVolume();
         List<BiKanVolume.VolumesBean> volumesBeans = new ArrayList<>();
         BiKanVolume.VolumesBean volumesBean = new BiKanVolume.VolumesBean();
         volumesBean.setVolumeId(bookId);
@@ -121,5 +121,42 @@ public class BiKanServiceImpl implements BiKanService {
         map.put("digression", "");
         logger.info("必看小说获取书籍章节内容:" + bookId + "\t章节ID:" + chapterId);
         return map;
+    }
+
+    private String getCategory(String category) {
+        switch (category) {
+            case "玄幻奇幻":
+                return "男生,东方玄幻,异界大陆";
+            case "都市生活":
+                return "男生,现代都市,都市生活";
+            case "现代都市":
+                return "男生,现代都市,都市异能";
+            case "现代言情":
+                return "女生,现代言情,都市情感";
+            case "浪漫青春":
+                return "女生,青春校园,青春言情";
+            case "历史军事":
+                return "男生,历史架空,其他";
+            case "仙侠武侠":
+                return "男生,武侠仙侠,仙侠修真";
+            case "玄幻仙侠":
+                return "男生,武侠仙侠,现代修仙";
+            case "科幻末世":
+                return "男生,科幻末世,末世危机";
+            case "悬疑灵异":
+                return "男生,现代都市,都市生活";
+            case "恐怖惊悚":
+                return "男生,灵异悬疑,恐怖惊悚";
+            case "古代言情":
+                return "女生,古代言情,古典架空";
+            case "豪门总裁":
+                return "女生,豪门总裁,都市总裁";
+            case "幻想言情":
+                return "女生,玄幻言情,玄幻女强";
+            case "女生灵异":
+                return "女生,悬疑灵异,幽冥情缘";
+
+        }
+        return "男生,历史架空,其他";
     }
 }

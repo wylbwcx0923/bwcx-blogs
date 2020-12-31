@@ -214,4 +214,14 @@ public class CpAuthServiceImpl implements CpAuthService {
         return jxResult;
 
     }
+
+    @Override
+    public CpAuth findCpAuthById(Integer id) {
+        return cpAuthMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public void updateAuthName(CpAuth cpAuth) {
+        cpAuthMapper.updateByPrimaryKeySelective(cpAuth);
+    }
 }

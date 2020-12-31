@@ -5,9 +5,11 @@ import com.nine.one.yuedu.read.config.JXResult;
 import com.nine.one.yuedu.read.entity.BookInfo;
 import com.nine.one.yuedu.read.service.BookInfoService;
 import com.nine.one.yuedu.read.utils.AliyunOSSUtil;
+import com.nine.one.yuedu.read.utils.ExcelUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +17,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
+import java.util.List;
 
 @Api(tags = "图书接口", value = "图书接口")
 @RequestMapping(value = "/91yuedu/bookInfo")
@@ -160,4 +166,103 @@ public class BookInfoController {
         }
     }
 
+
+    /**
+     * 导出报表
+     *
+     * @return
+     */
+    @RequestMapping(value = "/export")
+    @ResponseBody
+    public void export(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        //获取数据
+        List<BookInfo> list = bookInfoService.getBookInfos();
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        //excel标题
+        String[] title = {"书籍ID", "书名", "作者", "频道", "分类", "标签", "字数", "状态",
+                "简介", "最新更新时间", "合作商", "是否重点", "重点理由"};
+
+        //excel文件名
+        String fileName = "书籍表" + System.currentTimeMillis() + ".xls";
+
+        //sheet名
+        String sheetName = "书籍表";
+        String[][] content = new String[list.size()][5];
+        for (int i = 0; i < list.size(); i++) {
+            content[i] = new String[title.length];
+            BookInfo obj = list.get(i);
+            content[i][0] = obj.getId().toString();
+            content[i][1] = obj.getBookName();
+            content[i][2] = obj.getAuthor();
+            content[i][3] = getBoyAndGirl(obj.getCategory());
+            content[i][4] = obj.getCategory();
+            content[i][5] = obj.getKeywords();
+            content[i][6] = obj.getWords().toString();
+            content[i][7] = obj.getCompleteState() == 1 ? "连载" : "完结";
+            content[i][8] = obj.getDescription();
+            content[i][9] = simpleDateFormat.format(obj.getUpdateTime());
+            content[i][10] = "报联中视";
+            content[i][11] = "";
+            content[i][12] = "";
+        }
+
+        //创建HSSFWorkbook
+        HSSFWorkbook wb = ExcelUtil.getHSSFWorkbook(sheetName, title, content, null);
+
+        //响应到客户端
+        try {
+            this.setResponseHeader(response, fileName);
+            OutputStream os = response.getOutputStream();
+            wb.write(os);
+            os.flush();
+            os.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    //发送响应流方法
+    public void setResponseHeader(HttpServletResponse response, String fileName) {
+        try {
+            try {
+                fileName = new String(fileName.getBytes(), "ISO8859-1");
+            } catch (UnsupportedEncodingException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            response.setContentType("application/octet-stream;charset=ISO8859-1");
+            response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+            response.addHeader("Pargam", "no-cache");
+            response.addHeader("Cache-Control", "no-cache");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private String getBoyAndGirl(String category) {
+        String type = "";
+        switch (category) {
+            case "现代言情":
+            case "古代言情":
+            case "幻想言情":
+            case "豪门总裁":
+            case "女生灵异":
+            case "浪漫青春":
+                type = "女频";
+                break;
+            case "悬疑灵异":
+            case "历史军事":
+            case "玄幻奇幻":
+            case "仙侠武侠":
+            case "都市生活":
+            case "玄幻仙侠":
+            case "科幻末世":
+            case "现代都市":
+            case "恐怖惊悚":
+                type = "男频";
+                break;
+        }
+        return type;
+    }
 }

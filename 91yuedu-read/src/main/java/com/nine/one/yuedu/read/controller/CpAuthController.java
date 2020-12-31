@@ -171,5 +171,19 @@ public class CpAuthController {
         return new JXResult(true, ApiConstant.StatusCode.OK, "请求成功", cpAuthService.getChapterContentByBookIdAndChapterId(bookId, chapterId));
     }
 
+    @PutMapping(value = "update/cpAuth")
+    @ApiOperation(value = "修改授权CP方")
+    public JXResult updateCpAuth(@RequestBody @ApiParam(value = "CP方对象") CpAuth cpAuth) {
+        cpAuthService.updateAuthName(cpAuth);
+        return new JXResult(true, ApiConstant.StatusCode.OK, "修改成功");
+    }
+
+
+    @GetMapping(value = "get/cpAuth/{id}")
+    @ApiOperation(value = "根据IP获取授权CP方")
+    public JXResult getCpAuthById(@PathVariable @ApiParam("cp方Id") Integer id) {
+        return new JXResult(true, ApiConstant.StatusCode.OK, "请求成功", cpAuthService.findCpAuthById(id));
+    }
+
 
 }

@@ -128,4 +128,10 @@ public class BookInfoServiceImpl implements BookInfoService {
         }
         return bookContent;
     }
+
+    @Override
+    public List<BookInfo> getBookInfos() {
+        List<BookInfo> bookInfos = bookInfoMapper.selectAll();
+        return bookInfos;
+    }
 }

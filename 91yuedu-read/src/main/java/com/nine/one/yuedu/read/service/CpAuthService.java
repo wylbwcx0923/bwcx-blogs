@@ -2,7 +2,6 @@ package com.nine.one.yuedu.read.service;
 
 import com.github.pagehelper.PageInfo;
 import com.nine.one.yuedu.read.config.JXResult;
-import com.nine.one.yuedu.read.entity.BookInfo;
 import com.nine.one.yuedu.read.entity.ChapterInfo;
 import com.nine.one.yuedu.read.entity.CpAuth;
 import com.nine.one.yuedu.read.entity.CpAuthBook;
@@ -45,7 +44,7 @@ public interface CpAuthService {
      * @param cpAuthId
      * @return
      */
-  PageInfo<CpAuthBookVO> getCpAuthBookList(Integer cpAuthId, Integer pageIndex, Integer pageSize);
+    PageInfo<CpAuthBookVO> getCpAuthBookList(Integer cpAuthId, Integer pageIndex, Integer pageSize);
 
 
     /**
@@ -79,7 +78,7 @@ public interface CpAuthService {
      * @param bookId
      * @return
      */
-    Map<String,Object> getBookInfoByBookId(Integer bookId);
+    Map<String, Object> getBookInfoByBookId(Integer bookId);
 
 
     /**
@@ -101,5 +100,9 @@ public interface CpAuthService {
     String getChapterContentByBookIdAndChapterId(Integer bookId, Integer chapterId);
 
 
-   JXResult checkKeyAndParam(HttpServletRequest request);
+    JXResult checkKeyAndParam(HttpServletRequest request);
+
+    CpAuth findCpAuthById(Integer id);
+
+    void updateAuthName(CpAuth cpAuth);
 }

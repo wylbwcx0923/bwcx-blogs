@@ -26,11 +26,11 @@ import java.util.Map;
 @Service(value = "wpsService")
 public class WPSServiceImpl implements WPSService {
 
-    public static final String PUSH_URL = "https://minitest.wps.cn/novel_partner/api/v1/partner/push";
+    public static final String PUSH_URL = "https://outside.wps.cn/novel_partner/api/v1/partner/push";
 
     public static final String Access_Id = "AKBOOKZHONGSHI";
 
-    public static final String Secret_Id = "9UOgEv3H1LrvB8kW2vx1eyf6OREeYfxirAEqY0KwrUPXYAy9CnRIH4ylYp9vjwTW";
+    public static final String Secret_Id = "q2jv2Fq1uUYUC0hcmqu7lIFJfZPqs7jttblDonNeEAujdy7DJjutZe7QnOf1AhQr";
 
     @Autowired
     private CpAuthBookMapper cpAuthBookMapper;
@@ -63,7 +63,7 @@ public class WPSServiceImpl implements WPSService {
                 booksBean.setCover(bookInfo.getPicUrl());
                 booksBean.setAuthor(bookInfo.getAuthor());
                 booksBean.setTag(bookInfo.getBookName());
-                booksBean.setCategory(bookInfo.getCategory());
+                booksBean.setCategory(getCategory(bookInfo.getCategory()));
                 booksBean.setState(bookInfo.getCompleteState() == 0 ? 1 : 0);
                 List<WPSBook.BooksBean> list = new ArrayList<>();
                 list.add(booksBean);
@@ -100,5 +100,39 @@ public class WPSServiceImpl implements WPSService {
 
     private String getAuthorization() {
         return DigestUtils.md5DigestAsHex((Access_Id + Secret_Id).getBytes());
+    }
+
+    public String getCategory(String category) {
+        switch (category) {
+            case "现代言情":
+            case "豪门总裁":
+                return "现言";
+            case "古代言情":
+                return "古言";
+            case "女生灵异":
+            case "幻想言情":
+                return "幻言";
+            case "浪漫青春":
+                return "校园";
+            case "悬疑灵异":
+                return "悬疑";
+            case "历史军事":
+                return "历史军事";
+            case "玄幻奇幻":
+                return "玄幻奇幻";
+            case "仙侠武侠":
+                return "仙侠武侠";
+            case "都市生活":
+                return "都市";
+            case "玄幻仙侠":
+                return "仙侠武侠";
+            case "科幻末世":
+                return "科幻";
+            case "现代都市":
+                return "都市";
+            case "恐怖惊悚":
+                return "悬疑";
+        }
+        return "都市";
     }
 }
